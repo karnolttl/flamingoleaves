@@ -17,7 +17,7 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('post_title', 100);
             $table->integer('owner_id')->nullable()->unsigned()->index();
-            $table->integer('deleted')->default(0);
+            $table->string('slug')->unique();
             $table->timestamps();
         });
 

@@ -18,7 +18,6 @@ class CreateCommentsTable extends Migration
             $table->text('text', 2000);
             $table->integer('owner_id')->nullable()->unsigned()->index();
             $table->integer('post_id')->nullable()->unsigned()->index();
-            $table->integer('deleted')->default(0);
             $table->timestamps();
         });
 

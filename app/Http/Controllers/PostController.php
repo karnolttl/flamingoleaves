@@ -19,7 +19,7 @@ class PostController extends Controller
     public function index()
     {
         // create a variable and store all the blog posts in it from the database
-        $posts = Post::with('post_details', 'owner')->get();
+        $posts = Post::with('post_details', 'owner')->orderBy('id', 'desc')->paginate(10);
 
         // return a view and pass in the above variable
         return view('posts.index', compact('posts'));
@@ -46,19 +46,25 @@ class PostController extends Controller
         // validate the data (server-side)
         $this->validate($request, array(
             'post_title' => 'required|max:255',
+            'slug' => 'required|min:5|max:255',
             'post_text' => 'required'
         ));
         // store in the database
         $post = new Post;
         $post->post_title = $request->post_title;
         $post->owner_id = Auth::user()->id;
+        $post->slug = $request->slug;
         $post->save();
 
-        $post_detail = new Post_detail;
-        $post_detail->post_text = $request->post_text;
-        $post_detail->sequence = 1; // TODO work out sequencing logic for long post_text
-        $post_detail->post_id = $post->id;
-        $post_detail->save();
+        $post_texts = str_split($request->post_text, 20);
+        $sequenceIndex = 0;
+        foreach ($post_texts as $post_text) {
+            $post_detail = new Post_detail;
+            $post_detail->post_text = $post_text;
+            $post_detail->sequence = $sequenceIndex++;
+            $post_detail->post_id = $post->id;
+            $post_detail->save();
+        }
 
         Session::flash('success', 'The blog post was successfully saved!');
 
@@ -89,7 +95,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        // find the post in the database and save as a var
+        $post = Post::with('post_details', 'owner')->find($id);
+        //return the view and pass in the var we previously created
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -101,7 +110,43 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // validate the data
+        $this->validate($request, array(
+            'post_title' => 'required|max:255',
+            'slug' => 'required|min:5|max:255',
+            'post_text' => 'required'
+        ));
+        // save the data to the database
+        $post = Post::with('post_details', 'owner')->find($id);
+        $post->post_title = $request->input('post_title');
+        $post->slug = $request->slug;
+
+        $numOfPostDetails = $post->post_details->count();
+
+        $post_texts = str_split($request->post_text, 20);
+        $sequenceIndex = 0;
+
+        foreach ($post_texts as $post_text) {
+            if ($sequenceIndex >= $numOfPostDetails) {
+                $post_detail = new Post_detail;
+                $post_detail->post_text = $post_text;
+                $post_detail->sequence = $sequenceIndex++;
+                $post_detail->post_id = $post->id;
+                $post_detail->save();
+            }
+            else {
+                $post->post_details[$sequenceIndex++]->post_text = $post_text;
+            }
+        }
+
+        $post->push();
+
+        // set flash data with success message
+        Session::flash('success', 'This post was successfully saved.');
+
+        // redirect with flash data to posts.show
+        return view('posts.show', compact('post'));
+
     }
 
     /**
@@ -112,7 +157,11 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete();
+
+        Session::flash('success', 'The post was succesfully deleted.');
+        return redirect()->route('posts.index');
     }
 }
 

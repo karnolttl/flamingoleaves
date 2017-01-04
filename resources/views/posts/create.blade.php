@@ -15,6 +15,9 @@
             {{ Form::label('post_title', 'Title:')}}
             {{ Form::text('post_title',  null, ['class' => 'form-control', 'required' => '', 'maxlength' => 255 ])}}
 
+            {{ Form::label('slug', 'Slug:')}}
+            {{ Form::text('slug',  null, ['class' => 'form-control', 'required' => '', 'minlength' => '5', 'maxlength' => '255' ])}}
+
             {{ Form::label('post_text', "Post Body:")}}
             {{ Form::textarea('post_text', null, ['class' => 'form-control', 'required' => ''])}}
 

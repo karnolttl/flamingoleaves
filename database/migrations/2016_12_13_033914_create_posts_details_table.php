@@ -22,7 +22,7 @@ class CreatePostsDetailsTable extends Migration
         });
 
         Schema::table('post_details', function($table) {
-            $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
         });
     }
 

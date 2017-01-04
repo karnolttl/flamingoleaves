@@ -10,11 +10,6 @@ use App\User;
 
 class PageController extends Controller
 {
-    public function index()
-    {
-        $posts = Post::with('post_details', 'owner')->get();
-        return view('posts.index', compact('posts'));
-    }
     public function about()
     {
         return view('pages.about');
@@ -25,6 +20,10 @@ class PageController extends Controller
     }
     public function home()
     {
-        return view('pages.home');
+        $posts = Post::with('post_details', 'owner')
+                            ->orderBy('id', 'desc')
+                            ->take(5)
+                            ->get();
+        return view('pages.home', compact('posts'));
     }
 }
