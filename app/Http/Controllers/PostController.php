@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Post;
 use App\Post_detail;
 use App\User;
 use Auth;
 use Session;
+
 
 class PostController extends Controller
 {
@@ -46,7 +48,7 @@ class PostController extends Controller
         // validate the data (server-side)
         $this->validate($request, array(
             'post_title' => 'required|max:255',
-            'slug' => 'required|min:5|max:255',
+            'slug' => 'required|min:5|max:255|unique:posts',
             'post_text' => 'required'
         ));
         // store in the database
@@ -56,7 +58,7 @@ class PostController extends Controller
         $post->slug = $request->slug;
         $post->save();
 
-        $post_texts = str_split($request->post_text, 20);
+        $post_texts = str_split($request->post_text, 2000);
         $sequenceIndex = 0;
         foreach ($post_texts as $post_text) {
             $post_detail = new Post_detail;
@@ -113,7 +115,7 @@ class PostController extends Controller
         // validate the data
         $this->validate($request, array(
             'post_title' => 'required|max:255',
-            'slug' => 'required|min:5|max:255',
+            'slug' => ['required', 'min:5', 'max:255', Rule::unique('posts')->ignore($id)],
             'post_text' => 'required'
         ));
         // save the data to the database
@@ -123,9 +125,11 @@ class PostController extends Controller
 
         $numOfPostDetails = $post->post_details->count();
 
-        $post_texts = str_split($request->post_text, 20);
+        // split text into 2000 character chunks for Post_detail entries
+        $post_texts = str_split($request->post_text, 2000);
         $sequenceIndex = 0;
 
+        // update and add Post_detail objects if edited Post contains same or more text
         foreach ($post_texts as $post_text) {
             if ($sequenceIndex >= $numOfPostDetails) {
                 $post_detail = new Post_detail;
@@ -133,13 +137,22 @@ class PostController extends Controller
                 $post_detail->sequence = $sequenceIndex++;
                 $post_detail->post_id = $post->id;
                 $post_detail->save();
+                $post->post_details->add($post_detail);
             }
             else {
-                $post->post_details[$sequenceIndex++]->post_text = $post_text;
+                $post_detail = $post->post_details->where('sequence', '=', $sequenceIndex++)->first();
+                $post_detail->post_text = $post_text;
+                $post_detail->save();
             }
         }
 
-        $post->push();
+        // remove old Post_detail if updated Post contains less text
+        for ($i=$numOfPostDetails-1; $i >= $sequenceIndex ; $i--) {
+            $post->post_details->where('sequence', '=', $i)->first()->delete();
+            $post->post_details->pop();
+        }
+
+        $post->save();
 
         // set flash data with success message
         Session::flash('success', 'This post was successfully saved.');
@@ -164,9 +177,3 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 }
-
-// process variable data or params
-// talk to the model
-// recieve from the model
-// compile or process data form the model if needed
-// pass that data to the correct view
