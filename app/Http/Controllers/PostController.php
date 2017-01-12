@@ -13,6 +13,11 @@ use Session;
 
 class PostController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -48,14 +53,14 @@ class PostController extends Controller
         // validate the data (server-side)
         $this->validate($request, array(
             'post_title' => 'required|max:255',
-            'slug' => 'required|min:5|max:255|unique:posts',
+            'slug' => 'required|alpha_dash|min:5|max:255|unique:posts',
             'post_text' => 'required'
         ));
         // store in the database
         $post = new Post;
-        $post->post_title = $request->post_title;
+        $post->post_title = $request->input('post_title');
         $post->owner_id = Auth::user()->id;
-        $post->slug = $request->slug;
+        $post->slug = $request->input('slug');
         $post->save();
 
         $post_texts = str_split($request->post_text, 2000);
@@ -115,18 +120,18 @@ class PostController extends Controller
         // validate the data
         $this->validate($request, array(
             'post_title' => 'required|max:255',
-            'slug' => ['required', 'min:5', 'max:255', Rule::unique('posts')->ignore($id)],
+            'slug' => ['required', 'alpha_dash', 'min:5', 'max:255', Rule::unique('posts')->ignore($id)],
             'post_text' => 'required'
         ));
         // save the data to the database
         $post = Post::with('post_details', 'owner')->find($id);
         $post->post_title = $request->input('post_title');
-        $post->slug = $request->slug;
+        $post->slug = $request->input('slug');
 
         $numOfPostDetails = $post->post_details->count();
 
         // split text into 2000 character chunks for Post_detail entries
-        $post_texts = str_split($request->post_text, 2000);
+        $post_texts = str_split($request->input('post_text'), 2000);
         $sequenceIndex = 0;
 
         // update and add Post_detail objects if edited Post contains same or more text

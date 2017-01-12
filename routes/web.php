@@ -12,18 +12,10 @@
 */
 
 Auth::routes();
+Route::get('blog', [ 'uses' => 'BlogController@index', 'as' => 'blog.index']);
+Route::get('blog/{slug}', ['uses' => 'BlogController@single', 'as' => 'blog.single'])
+    ->where('slug', '[\w\d\-\_]+');
 Route::get('/','PageController@home');
 Route::get('about','PageController@about');
 Route::get('contact','PageController@contact');
 Route::resource('posts', 'PostController');
-
-// Route::get('/home', 'HomeController@index');
-// Route::get('/page/{number}','PageController@list');
-// Route::get('/post/{post}','PostController@show');
-// Route::post('/post/{post}/comments', 'PostController@store');
-//
-// Route::get('love', 'myController@sendLove');
-// Route::get('cards', 'CardsController@index');
-// Route::get('cards/{card}', 'CardsController@show');
-// Route::post('cards/{card}/notes', 'NotesController@store');
-// Route::get('/notes/{note}/edit', 'NotesController@edit');
