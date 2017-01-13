@@ -15,7 +15,7 @@
 
             {{ Form::label('post_text', "Post Body:")}}
             <textarea class="form-control" required="" name="post_text" cols="50" rows="10" id="post_text">@foreach ($post->post_details as $post_detail){{ $post_detail->post_text }}@endforeach</textarea>
-            {{-- {{ Form::textarea('post_text', '', ['class' => 'form-control', 'required' => ''])}} --}}
+
         </div>
 
         <div class="col-md-4">

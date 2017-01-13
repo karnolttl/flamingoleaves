@@ -26,7 +26,7 @@ class PostController extends Controller
     public function index()
     {
         // create a variable and store all the blog posts in it from the database
-        $posts = Post::with('post_details', 'owner')->orderBy('id', 'desc')->paginate(10);
+        $posts = Post::with('post_details', 'owner')->where('owner_id', '=', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
 
         // return a view and pass in the above variable
         return view('posts.index', compact('posts'));
@@ -90,6 +90,10 @@ class PostController extends Controller
     {
 
         $post = Post::with('post_details', 'owner')->find($id);
+        if ($post->owner_id != Auth::user()->id)
+        {
+            return redirect()->route('posts.index');
+        }
         return view('posts.show', compact('post'));
 
     }
@@ -104,6 +108,10 @@ class PostController extends Controller
     {
         // find the post in the database and save as a var
         $post = Post::with('post_details', 'owner')->find($id);
+        if ($post->owner_id != Auth::user()->id)
+        {
+            return redirect()->route('posts.index');
+        }
         //return the view and pass in the var we previously created
         return view('posts.edit', compact('post'));
     }
@@ -176,6 +184,12 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+
+        if ($post->owner_id != Auth::user()->id)
+        {
+            return redirect()->route('posts.index');
+        }
+
         $post->delete();
 
         Session::flash('success', 'The post was succesfully deleted.');
