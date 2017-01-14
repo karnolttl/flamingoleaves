@@ -13,6 +13,13 @@
             {{ Form::label('slug', 'Slug:')}}
             {{ Form::text('slug',  $post->slug, ['class' => 'form-control', 'required' => '', 'minlength' => '5', 'maxlength' => '255' ])}}
 
+            {{ Form::label('category_id', 'Category:')}}
+            <select class="form-control" name="category_id">
+                @foreach ($categories as $category)
+                    <option @if ($category->id == $post->category_id)selected="selected"@endif value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+
             {{ Form::label('post_text', "Post Body:")}}
             <textarea class="form-control" required="" name="post_text" cols="50" rows="10" id="post_text">@foreach ($post->post_details as $post_detail){{ $post_detail->post_text }}@endforeach</textarea>
 

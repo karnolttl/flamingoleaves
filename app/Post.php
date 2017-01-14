@@ -32,4 +32,9 @@ class Post extends Model
     {
         return $this->comments()->save($comment);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
