@@ -35,6 +35,7 @@
                         <li>
                             <a href="{{ url('/posts') }}">Posts</a>
                             <a href="{{ route('categories.index') }}">Categories</a>
+                            <a href="{{ route('tags.index') }}">Tags</a>
 
                             <a href="{{ url('/logout') }}"
                                 onclick="event.preventDefault();

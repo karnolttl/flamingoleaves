@@ -8,6 +8,7 @@ use App\Post;
 use App\Post_detail;
 use App\User;
 use App\Category;
+Use App\Tag;
 use Auth;
 use Session;
 
@@ -41,7 +42,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -77,6 +79,11 @@ class PostController extends Controller
             $post_detail->save();
         }
 
+        if (isset($request->tags)) {
+            $post->tags()->syncWithoutDetaching($request->tags);
+        }
+
+
         Session::flash('success', 'The blog post was successfully saved!');
 
         // redirect to another page
@@ -92,12 +99,12 @@ class PostController extends Controller
      */
     public function show($id)
     {
-
         $post = Post::with('post_details', 'owner', 'category')->find($id);
         if ($post == null || $post->owner_id != Auth::user()->id)
         {
             return redirect()->route('posts.index');
         }
+
         return view('posts.show', compact('post'));
 
     }
@@ -111,14 +118,15 @@ class PostController extends Controller
     public function edit($id)
     {
         $categories = Category::all();
-        $post = Post::with('post_details', 'owner', 'category')->find($id);
+        $tags = Tag::all();
+        $post = Post::with('post_details', 'owner')->find($id);
 
         if ($post == null || $post->owner_id != Auth::user()->id)
         {
             return redirect()->route('posts.index');
         }
 
-        return view('posts.edit', compact('post', 'categories'));
+        return view('posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -173,6 +181,11 @@ class PostController extends Controller
 
         $post->save();
 
+        if (isset($request->tags)) {
+            $post->tags()->sync($request->tags);
+        } else {
+            $post->tags()->sync([]);
+        }
 
         // set flash data with success message
         Session::flash('success', 'This post was successfully saved.');

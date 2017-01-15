@@ -20,3 +20,4 @@ Route::get('about',['uses' => 'PageController@about', 'as' => 'pages.about']);
 Route::get('contact',['uses' => 'PageController@contact', 'as' => 'pages.contact']);
 Route::resource('posts', 'PostController');
 Route::resource('categories', 'CategoryController', ['except' => ['create']]);
+Route::resource('tags', 'TagController', ['except' => ['create']]);

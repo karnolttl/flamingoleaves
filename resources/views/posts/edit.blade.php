@@ -2,6 +2,11 @@
 
 @section('title', 'Edit Post')
 
+@section('stylesheets')
+    {!! Html::style('css/parsley.css') !!}
+    {!! Html::style('css/select2.min.css') !!}
+@endsection
+
 @section('content')
     <div class="row">
         {!! Form::open(['route' => ['posts.update', $post->id], 'data-parsley-validate' => '']) !!}
@@ -17,6 +22,13 @@
             <select class="form-control" name="category_id">
                 @foreach ($categories as $category)
                     <option @if ($category->id == $post->category_id)selected="selected"@endif value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+
+            {{ Form::label('tags', 'Tags:')}}
+            <select class="form-control select2-multi" name="tags[]" multiple="mulitple">
+                @foreach ($tags as $tag)
+                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                 @endforeach
             </select>
 
@@ -52,4 +64,14 @@
         </div>
         {!! Form::close() !!}
     </div>
+@endsection
+
+@section('scripts')
+    {!! Html::script('js/parsley.min.js') !!}
+    {!! Html::script('js/select2.min.js') !!}
+
+    <script type="text/javascript">
+        var multi = $('.select2-multi').select2();
+        multi.val({!! json_encode($post->tags()->getRelatedIds()) !!}).trigger('change');
+    </script>
 @endsection

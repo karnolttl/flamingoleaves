@@ -13,7 +13,7 @@ class BlogController extends Controller
 
     public function index()
     {
-        $posts = Post::with('post_details', 'owner', 'category')->paginate(8);
+        $posts = Post::with('post_details', 'owner', 'category')->orderBy('id', 'desc')->paginate(8);
         return view('blog.index', compact('posts'));
     }
 
