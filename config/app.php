@@ -179,6 +179,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * My Added Service Providers
+         */
+        Barryvdh\Debugbar\ServiceProvider::class
     ],
 
     /*
@@ -228,6 +232,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        // My Added Facades
+        'Debugbar' => Barryvdh\Debugbar\Facade::class
     ],
 
 ];
