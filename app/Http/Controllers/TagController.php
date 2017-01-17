@@ -34,7 +34,7 @@ class TagController extends Controller
     {
         // validate the data (server-side)
         $this->validate($request, array(
-            'name' => ['required', 'min:5', 'max:255', 'unique:tags'],
+            'name' => ['required', 'max:255', 'unique:tags'],
         ));
 
         // store in the database
@@ -68,7 +68,8 @@ class TagController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tag = Tag::find($id);
+        return view('tags.edit', compact('tag'));
     }
 
     /**
@@ -80,7 +81,17 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:255', Rule::unique('tags')->ignore($id)]]);
+
+        $tag = Tag::find($id);
+        $tag->name = $request->name;
+        $tag->save();
+
+        Session::flash('success', 'This tag was successfully saved.');
+
+        return view('tags.show', compact('tag'));
+
     }
 
     /**
@@ -91,6 +102,18 @@ class TagController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        $tag = Tag::find($id);
+
+        if ($tag->posts->count() != 0) {
+            Session::flash('warning', 'This tag cannot be deleted because it is used at least once.');
+            return view('tags.show', compact('tag'));
+        }
+
+        $tag->posts()->detach();
+        $tag->delete();
+
+        Session::flash('success', 'The tag was succesfully deleted.');
+        return redirect()->route('tags.index');
     }
 }

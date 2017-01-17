@@ -34,7 +34,7 @@ class CategoryController extends Controller
     {
         // validate the data (server-side)
         $this->validate($request, array(
-            'name' => ['required', 'min:5', 'max:255', 'unique:categories'],
+            'name' => ['required', 'max:255', 'unique:categories'],
         ));
 
         // store in the database
@@ -42,7 +42,7 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->save();
 
-        Session::flash('success', 'New category has been created.');
+        Session::flash('success', 'A new category has been created.');
 
         // redirect to another page
         return redirect()->route('categories.index');
@@ -56,7 +56,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+        return view('categories.show', compact('category'));
     }
 
     /**
@@ -67,7 +68,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::find($id);
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -79,7 +81,16 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:255', Rule::unique('categories')->ignore($id)]]);
+
+        $category = Category::find($id);
+        $category->name = $request->name;
+        $category->save();
+
+        Session::flash('success', 'This category was successfully saved.');
+
+        return view('categories.show', compact('category'));
     }
 
     /**
@@ -90,6 +101,16 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+
+        if ($category->posts->count() != 0) {
+            Session::flash('warning', 'This category cannot be deleted because it is used at least once.');
+            return view('categories.show', compact('category'));
+        }
+
+        $category->delete();
+
+        Session::flash('success', 'The category was succesfully deleted.');
+        return redirect()->route('categories.index');
     }
 }
