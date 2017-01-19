@@ -2,6 +2,11 @@
 
 @section('title', 'Edit Post')
 
+@section('stylesheets')
+    {!! Html::style('css/parsley.css') !!}
+    {!! Html::style('css/select2.min.css') !!}
+@endsection
+
 @section('content')
     <div class="row">
         {!! Form::open(['route' => ['posts.update', $post->id], 'data-parsley-validate' => '']) !!}
@@ -13,9 +18,23 @@
             {{ Form::label('slug', 'Slug:')}}
             {{ Form::text('slug',  $post->slug, ['class' => 'form-control', 'required' => '', 'minlength' => '5', 'maxlength' => '255' ])}}
 
+            {{ Form::label('category_id', 'Category:')}}
+            <select class="form-control" name="category_id">
+                @foreach ($categories as $category)
+                    <option @if ($category->id == $post->category_id)selected="selected"@endif value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+
+            {{ Form::label('tags', 'Tags:')}}
+            <select class="form-control select2-multi" name="tags[]" multiple="mulitple">
+                @foreach ($tags as $tag)
+                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                @endforeach
+            </select>
+
             {{ Form::label('post_text', "Post Body:")}}
             <textarea class="form-control" required="" name="post_text" cols="50" rows="10" id="post_text">@foreach ($post->post_details as $post_detail){{ $post_detail->post_text }}@endforeach</textarea>
-            {{-- {{ Form::textarea('post_text', '', ['class' => 'form-control', 'required' => ''])}} --}}
+
         </div>
 
         <div class="col-md-4">
@@ -45,4 +64,14 @@
         </div>
         {!! Form::close() !!}
     </div>
+@endsection
+
+@section('scripts')
+    {!! Html::script('js/parsley.min.js') !!}
+    {!! Html::script('js/select2.min.js') !!}
+
+    <script type="text/javascript">
+        var multi = $('.select2-multi').select2();
+        multi.val({!! json_encode($post->tags()->getRelatedIds()) !!}).trigger('change');
+    </script>
 @endsection

@@ -7,6 +7,8 @@ use Illuminate\Validation\Rule;
 use App\Post;
 use App\Post_detail;
 use App\User;
+use App\Category;
+Use App\Tag;
 use Auth;
 use Session;
 
@@ -26,7 +28,7 @@ class PostController extends Controller
     public function index()
     {
         // create a variable and store all the blog posts in it from the database
-        $posts = Post::with('post_details', 'owner')->orderBy('id', 'desc')->paginate(10);
+        $posts = Post::with('post_details', 'owner', 'category')->where('owner_id', '=', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
 
         // return a view and pass in the above variable
         return view('posts.index', compact('posts'));
@@ -39,7 +41,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -54,13 +58,15 @@ class PostController extends Controller
         $this->validate($request, array(
             'post_title' => 'required|max:255',
             'slug' => 'required|alpha_dash|min:5|max:255|unique:posts',
+            'category_id' => 'required|integer',
             'post_text' => 'required'
         ));
         // store in the database
         $post = new Post;
-        $post->post_title = $request->input('post_title');
+        $post->post_title = $request->post_title;
         $post->owner_id = Auth::user()->id;
-        $post->slug = $request->input('slug');
+        $post->slug = $request->slug;
+        $post->category_id = $request->category_id;
         $post->save();
 
         $post_texts = str_split($request->post_text, 2000);
@@ -72,6 +78,11 @@ class PostController extends Controller
             $post_detail->post_id = $post->id;
             $post_detail->save();
         }
+
+        if (isset($request->tags)) {
+            $post->tags()->syncWithoutDetaching($request->tags);
+        }
+
 
         Session::flash('success', 'The blog post was successfully saved!');
 
@@ -88,8 +99,12 @@ class PostController extends Controller
      */
     public function show($id)
     {
+        $post = Post::with('post_details', 'owner', 'category')->find($id);
+        if ($post == null || $post->owner_id != Auth::user()->id)
+        {
+            return redirect()->route('posts.index');
+        }
 
-        $post = Post::with('post_details', 'owner')->find($id);
         return view('posts.show', compact('post'));
 
     }
@@ -102,10 +117,16 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        // find the post in the database and save as a var
+        $categories = Category::all();
+        $tags = Tag::all();
         $post = Post::with('post_details', 'owner')->find($id);
-        //return the view and pass in the var we previously created
-        return view('posts.edit', compact('post'));
+
+        if ($post == null || $post->owner_id != Auth::user()->id)
+        {
+            return redirect()->route('posts.index');
+        }
+
+        return view('posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -121,17 +142,18 @@ class PostController extends Controller
         $this->validate($request, array(
             'post_title' => 'required|max:255',
             'slug' => ['required', 'alpha_dash', 'min:5', 'max:255', Rule::unique('posts')->ignore($id)],
+            'category_id' => 'required|integer',
             'post_text' => 'required'
         ));
-        // save the data to the database
-        $post = Post::with('post_details', 'owner')->find($id);
-        $post->post_title = $request->input('post_title');
-        $post->slug = $request->input('slug');
 
+        $post = Post::with('post_details', 'owner')->find($id);
+        $post->post_title = $request->post_title;
+        $post->slug = $request->slug;
+        $post->category_id = $request->category_id;
         $numOfPostDetails = $post->post_details->count();
 
         // split text into 2000 character chunks for Post_detail entries
-        $post_texts = str_split($request->input('post_text'), 2000);
+        $post_texts = str_split($request->post_text, 2000);
         $sequenceIndex = 0;
 
         // update and add Post_detail objects if edited Post contains same or more text
@@ -159,11 +181,17 @@ class PostController extends Controller
 
         $post->save();
 
+        if (isset($request->tags)) {
+            $post->tags()->sync($request->tags);
+        } else {
+            $post->tags()->sync([]);
+        }
+
         // set flash data with success message
         Session::flash('success', 'This post was successfully saved.');
 
         // redirect with flash data to posts.show
-        return view('posts.show', compact('post'));
+        return redirect()->route('posts.show', compact('post'));
 
     }
 
@@ -176,6 +204,13 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+
+        if ($post->owner_id != Auth::user()->id)
+        {
+            return redirect()->route('posts.index');
+        }
+
+        $post->tags()->detach();
         $post->delete();
 
         Session::flash('success', 'The post was succesfully deleted.');

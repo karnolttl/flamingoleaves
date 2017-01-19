@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Flamingoleaves</a>
+      <a class="navbar-brand" href="/">Flamingoleaves</a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -34,6 +34,8 @@
                     <ul class="dropdown-menu" role="menu">
                         <li>
                             <a href="{{ url('/posts') }}">Posts</a>
+                            <a href="{{ route('categories.index') }}">Categories</a>
+                            <a href="{{ route('tags.index') }}">Tags</a>
 
                             <a href="{{ url('/logout') }}"
                                 onclick="event.preventDefault();
