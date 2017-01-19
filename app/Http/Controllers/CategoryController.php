@@ -90,7 +90,7 @@ class CategoryController extends Controller
 
         Session::flash('success', 'This category was successfully saved.');
 
-        return view('categories.show', compact('category'));
+        return redirect()->route('categories.show', compact('category'));
     }
 
     /**
@@ -105,7 +105,7 @@ class CategoryController extends Controller
 
         if ($category->posts->count() != 0) {
             Session::flash('warning', 'This category cannot be deleted because it is used at least once.');
-            return view('categories.show', compact('category'));
+            return redirect()->route('categories.show', compact('category'));
         }
 
         $category->delete();

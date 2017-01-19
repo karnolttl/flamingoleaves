@@ -90,7 +90,7 @@ class TagController extends Controller
 
         Session::flash('success', 'This tag was successfully saved.');
 
-        return view('tags.show', compact('tag'));
+        return redirect()->route('tags.show', compact('tag'));
 
     }
 
@@ -107,7 +107,7 @@ class TagController extends Controller
 
         if ($tag->posts->count() != 0) {
             Session::flash('warning', 'This tag cannot be deleted because it is used at least once.');
-            return view('tags.show', compact('tag'));
+            return redirect()->route('tags.show', compact('tag'));
         }
 
         $tag->posts()->detach();

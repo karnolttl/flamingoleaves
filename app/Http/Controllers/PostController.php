@@ -191,7 +191,7 @@ class PostController extends Controller
         Session::flash('success', 'This post was successfully saved.');
 
         // redirect with flash data to posts.show
-        return view('posts.show', compact('post'));
+        return redirect()->route('posts.show', compact('post'));
 
     }
 
