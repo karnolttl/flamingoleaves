@@ -6,6 +6,9 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Debugbar;
+use Mail;
+use Session;
 
 class RegisterController extends Controller
 {
@@ -62,10 +65,38 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $userInfo = [
+            'name' => $data['name'],
+            'token' => $user['token']
+        ];
+
+        Mail::send('emails.confirm', $userInfo, function ($message) use ($data){
+            $message->from('registration@flamingoleaves.com', 'Admin');
+            $message->to($data['email']);
+            $message->subject('Flamingoleaves.com Registration');
+        });
+
+        Session::flash('warning', 'Please confirm your email address.');
+
+        return $user;
+    }
+
+    public function registered()
+    {
+        $this->guard()->logout();
+    }
+
+    public function confirmEmail($token)
+    {
+        $user = User::whereToken($token)->firstOrFail()->confirmEmail();
+
+        Session::flash('success', 'Your email is now confirmed. Please login.');
+        return redirect()->route('login');
     }
 }

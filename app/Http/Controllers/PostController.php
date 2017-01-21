@@ -56,11 +56,11 @@ class PostController extends Controller
     {
         // validate the data (server-side)
         $this->validate($request, array(
-            'post_title' => 'required|max:255',
-            'slug' => 'required|alpha_dash|min:5|max:255|unique:posts',
-            'category_id' => 'required|integer',
-            'post_text' => 'required'
-        ));
+             'post_title' => 'required|max:255',
+             'slug' => 'required|alpha_dash|min:5|max:255|unique:posts',
+             'category_id' => 'required|integer',
+             'post_text' => 'required'
+         ));
         // store in the database
         $post = new Post;
         $post->post_title = $request->post_title;

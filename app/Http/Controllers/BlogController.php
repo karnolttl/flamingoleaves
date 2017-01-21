@@ -7,6 +7,7 @@ use App\Post;
 use App\Post_detail;
 use App\User;
 use Auth;
+use Debugbar;
 
 class BlogController extends Controller
 {
@@ -14,6 +15,7 @@ class BlogController extends Controller
     public function index()
     {
         $posts = Post::with('post_details', 'owner', 'category')->orderBy('id', 'desc')->paginate(8);
+        Debugbar::info($posts);
         return view('blog.index', compact('posts'));
     }
 
