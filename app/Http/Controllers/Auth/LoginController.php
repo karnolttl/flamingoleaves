@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Session;
 use Auth;
+use Mail;
 use Debugbar;
 
 class LoginController extends Controller
@@ -42,9 +43,23 @@ class LoginController extends Controller
 
     public function authenticated()
     {
-         if (Auth::user()->verified == 0) {
+        $user = Auth::user();
+         if ($user->verified == 0) {
              Auth::logout();
-             Session::flash('warning', 'Please confirm your email address.');
+
+             $userInfo = [
+                 'name' => $user['name'],
+                 'token' => $user['token']
+             ];
+
+             Mail::send('emails.confirm', $userInfo, function ($message) use ($user){
+                 $message->from('registration@flamingoleaves.com', 'Admin');
+                 $message->to($user['email']);
+                 $message->subject('Flamingoleaves.com Registration');
+             });
+
+             Session::flash('warning', 'Please confirm your email address. A confirmation email has been re-sent to you.');
+
              return redirect()->route('login');
          }
     }

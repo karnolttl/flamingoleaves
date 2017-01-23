@@ -19,18 +19,16 @@ Below is a list of anticipated features where items are crossed off as implement
 1. Authorization / Access Control
   1. Posts
     1. Add/Edit/Delete Post
-  1. Comments
 1. Content creator 'Backend' including a dashboard and blog creation form
   1. ~~Basics~~
-  1. [Markdown input](https://github.com/erusev/parsedown)
+  1. ~~[Markdown input](https://github.com/erusev/parsedown)~~
 1. Content viewing 'Frontend' with ability to add comments and tags
   1. ~~pretty URLs using slugs~~
+  1. ~~Tags~~
+  1. Comments
+1. ~~Categories~~
 1. Images and Gallery
-1. Comments
-1. Categories
-1. Tags
-1. Images and Gallery
-1. Email address verification before registration completion
+1. ~~Email address verification before registration completion~~
 1. Create a custom frontend without the use of a tool like Bootstrap
 
 
@@ -38,4 +36,4 @@ Below is a list of anticipated features where items are crossed off as implement
 
 1. Sign up for Digital Ocean
 1. Sign up for Forge
-1. Sign up for Mailtrap
+1. ~~Sign up for Mailtrap~~

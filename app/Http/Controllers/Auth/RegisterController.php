@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Debugbar;
 use Mail;
 use Session;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -71,6 +72,9 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
+        $user->token = str_random(30);
+        $user->save();
+
         $userInfo = [
             'name' => $data['name'],
             'token' => $user['token']
@@ -94,9 +98,14 @@ class RegisterController extends Controller
 
     public function confirmEmail($token)
     {
-        $user = User::whereToken($token)->firstOrFail()->confirmEmail();
+        $user = User::whereToken($token)->firstOrFail();
+
+        $user->verified = true;
+        $user->token = null;
+        $user->save();
 
         Session::flash('success', 'Your email is now confirmed. Please login.');
+
         return redirect()->route('login');
     }
 }

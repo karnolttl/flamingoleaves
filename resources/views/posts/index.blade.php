@@ -30,7 +30,8 @@
                         <th>{{ $post->id }}</th>
                         <td>{{ $post->post_title }}</td>
                         <td>
-                            {{ substr($post->post_details[0]->post_text, 0, 50) }}{{ strlen($post->post_details[0]->post_text) > 50 ? "..." : ""}}
+                            {!! (new Parsedown())->text(substr($post->post_details[0]->post_text, 0, 50)) !!}
+                            {{ strlen($post->post_details[0]->post_text) > 50 ? "..." : ""}}
                         </td>
                         <td>{{ $post->category->name }}</td>
                         <td>{{ date('M j, Y', strtotime($post->created_at)) }}</td>

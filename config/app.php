@@ -183,6 +183,7 @@ return [
          * My Added Service Providers
          */
         Barryvdh\Debugbar\ServiceProvider::class
+        
     ],
 
     /*
