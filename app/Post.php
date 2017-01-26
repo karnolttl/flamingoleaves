@@ -42,4 +42,9 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function imgs()
+    {
+        return $this->hasMany(Img::class);
+    }
 }

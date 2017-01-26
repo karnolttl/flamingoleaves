@@ -32,4 +32,9 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function imgs()
+    {
+        return $this->hasMany(Img::class);
+    }
+
 }
