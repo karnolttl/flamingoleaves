@@ -14,6 +14,12 @@
                   @if ($post->category != null)
                       <p>Posted In: <strong>{{ $post->category->name }}</strong></p>
                   @endif
+                  <div class="tags">
+                      @foreach ($post->tags as $tag)
+                          <span class="label label-default">{{ $tag->name }}</span>
+                      @endforeach
+                  </div>
+                  <br>
                   <a href="{{ route('blog.single', $post->slug) }}" class="btn btn-primary">Read More</a>
               </div>
               <hr>

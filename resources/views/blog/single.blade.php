@@ -7,11 +7,18 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
           <h1>{{ $post->post_title }}</h1>
-          <p><p class="lead">@foreach ($post->post_details as $post_detail){!! (new Parsedown())->text($post_detail->post_text) !!}@endforeach</p></p>
+          @foreach ($post->post_details as $post_detail)
+              {!! (new Parsedown())->text($post_detail->post_text) !!}
+          @endforeach
+          <hr>
           @if ($post->category != null)
-              <hr>
               <p>Posted In:{{ $post->category->name }}</p>
           @endif
+          <div class="tags">
+              @foreach ($post->tags as $tag)
+                  <span class="label label-default">{{ $tag->name }}</span>
+              @endforeach
+          </div>
 
       </div>
     </div>
