@@ -15,7 +15,7 @@ Below is a list of anticipated features where items are crossed off as implement
 
 1. User Authentication
   1. Password Complexity Check
-  1. Forgot Password
+  ~~1. Forgot Password~~
 1. Authorization / Access Control
   1. Posts
     1. Add/Edit/Delete Post
@@ -25,13 +25,13 @@ Below is a list of anticipated features where items are crossed off as implement
 1. Content viewing 'Frontend' with ability to add comments and tags
   1. ~~pretty URLs using slugs~~
   1. ~~Tags~~
-    1. update blog controller to display tags
+    ~~1. update blog controller to display tags~~
   1. Comments
 1. ~~Categories~~
-    1. update blog controller's category display
+    ~~1. update blog controller's category display~~
 1. Images and Gallery
-    1. updated blog controller to display images
-    1. updated post controller to display, delete images
+    ~~1. updated blog controller to display images~~
+    ~~1. updated post controller to display, delete images~~
 1. ~~Email address verification before registration completion~~
 1. Create a custom frontend without the use of a tool like Bootstrap
 
@@ -41,3 +41,4 @@ Below is a list of anticipated features where items are crossed off as implement
 1. Sign up for Digital Ocean
 1. Sign up for Forge
 1. ~~Sign up for Mailtrap~~
+1. Wireframe new frontend

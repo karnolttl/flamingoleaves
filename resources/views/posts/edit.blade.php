@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="row">
-        {!! Form::open(['route' => ['posts.update', $post->id], 'data-parsley-validate' => '']) !!}
+        {!! Form::open(['route' => ['posts.update', $post->id], 'data-parsley-validate' => '', 'files' => true]) !!}
         {{ method_field('PUT') }}
         <div class="col-md-8">
             {{ Form::label('post_title', 'Title:')}}
@@ -32,8 +32,24 @@
                 @endforeach
             </select>
 
+            {{ Form::label('images', 'Upload Image(s):')}}
+            {{ Form::file('images[]', ['multiple' => true]) }}
+
             {{ Form::label('post_text', "Post Body:")}}
             <textarea class="form-control" required="" name="post_text" cols="50" rows="10" id="post_text">@foreach ($post->post_details as $post_detail){{ $post_detail->post_text }}@endforeach</textarea>
+
+            <div class="col-md-8">
+                <div class="row">
+                    @foreach ($post->imgs as $img)
+                        <div class="col-xs-4">
+                            <a href="{{ route('image.show', $img->id) }}">
+                                <img src="{{ asset('img') . '/' . $img->name }}" alt="" width="125">
+                            </a>
+                        </a></div>
+                    @endforeach
+                </div>
+
+            </div>
 
         </div>
 

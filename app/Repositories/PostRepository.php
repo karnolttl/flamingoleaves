@@ -14,8 +14,16 @@ use Auth;
 use Session;
 use Image;
 use Validator;
+use App\Repositories\ImgRepository;
 
 class PostRepository {
+
+    protected $img;
+
+    public function __construct(ImgRepository $img)
+    {
+        $this->img = $img;
+    }
 
     public function getLatestPostsbyCurrentUserPaginated() {
 
@@ -79,24 +87,7 @@ class PostRepository {
             $post->tags()->syncWithoutDetaching($request->tags);
         }
 
-        if ($request->hasFile('images')) {
-            $i = 1;
-            foreach ($request->images as $image) {
-                $filename = time() . $i++ . '.' . $image->getClientOriginalExtension();
-                $location = public_path('img/' . $filename);
-                Image::make($image)
-                    ->resize(null, 400, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();})
-                    ->save($location);
-
-                Img::create([
-                    'name' => $filename,
-                    'owner_id' => Auth::user()->id,
-                    'post_id' => $post->id,
-                ]);
-            }
-        }
+        $this->img->saveImgs($request, $post->id);
 
         Session::flash('success', 'The blog post was successfully saved!');
 
@@ -146,24 +137,7 @@ class PostRepository {
             $post->tags()->sync([]);
         }
 
-        if ($request->hasFile('images')) {
-            $i = 1;
-            foreach ($request->images as $image) {
-                $filename = time() . $i++ . '.' . $image->getClientOriginalExtension();
-                $location = public_path('img/' . $filename);
-                Image::make($image)
-                    ->resize(null, 400, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();})
-                    ->save($location);
-
-                Img::create([
-                    'name' => $filename,
-                    'owner_id' => Auth::user()->id,
-                    'post_id' => $post->id,
-                ]);
-            }
-        }
+        $this->img->saveImgs($request, $post->id);
 
         // set flash data with success message
         Session::flash('success', 'This post was successfully saved.');
