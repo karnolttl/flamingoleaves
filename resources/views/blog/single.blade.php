@@ -23,22 +23,9 @@
                   <img src="{{ asset('img') . '/' . $img->name }}" alt="" width="125">
               </a>
           @endforeach
-          @foreach ($comments as $comment)
-              <hr>
-              <h4>{{ $comment->owner->name }}</h4>
-              {!! (new Parsedown())->text($comment->text) !!}
 
-              @if (isset($reply_id) && $reply_id == $comment->id)
-                  @include('partials._commentform')
-              @else
-                  <a href="{{ route('blog.single', ['slug' => $post->slug, 'reply_id' => $comment->id]) }}" class="btn btn-default btn-sm">Reply to {{ $comment->id}}</a>
-              @endif
-          @endforeach
-          <hr>
-          @if (! isset($reply_id))
-              @include('partials._commentform')
-          @endif
+          @include('partials._disqus')
+          
       </div>
     </div>
-
 @endsection

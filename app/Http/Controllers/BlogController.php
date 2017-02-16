@@ -7,17 +7,10 @@ use App\Post;
 use App\Post_detail;
 use App\User;
 use Auth;
-use App\Repositories\CommentRepository;
 use Debugbar;
 
 class BlogController extends Controller
 {
-    protected $comment;
-
-    public function __construct(CommentRepository $comment)
-    {
-        $this->comment = $comment;
-    }
 
     public function index()
     {
@@ -25,15 +18,10 @@ class BlogController extends Controller
         return view('blog.index', compact('posts'));
     }
 
-    public function single($slug, $reply_id = null)
+    public function single($slug)
     {
         $post = Post::with('post_details', 'owner', 'category')->where('slug', '=', $slug)->first();
-        $comments = $post->comments()->orderBy('reply_id', 'ASC')->orderBy('id', "ASC")->get();
-        //return $comments->pull(2);
-        return $this->comment->sortComments($comments);
-
-
-        return view('blog.single', compact('post', 'reply_id', 'comments'));
+        return view('blog.single', compact('post'));
     }
 
 }

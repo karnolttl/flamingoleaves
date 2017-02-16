@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Repositories\PostRepositoryInterface;
 use App\Post;
 use App\Post_detail;
 use App\User;
@@ -14,16 +15,15 @@ use Auth;
 use Session;
 use Image;
 use Validator;
-use App\Repositories\PostRepository;
 
 class PostController extends Controller
 {
 
-    protected $myPost;
+    protected $post;
 
-    public function __construct(PostRepository $post)
+    public function __construct(PostRepositoryInterface $post)
     {
-        $this->myPost = $post;
+        $this->post = $post;
         $this->middleware('auth');
     }
     /**
@@ -33,7 +33,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = $this->myPost->getLatestPostsbyCurrentUserPaginated();
+        $posts = $this->post->getLatestPostsbyCurrentUserPaginated();
         return view('posts.index', compact('posts'));
     }
 
@@ -44,7 +44,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $tagsAndCategories = $this->myPost->getAllTagsAndCategories();
+        $tagsAndCategories = $this->post->getAllTagsAndCategories();
         return view('posts.create', $tagsAndCategories);
     }
 
@@ -57,7 +57,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
-        $validator = $this->myPost->validatePost($request);
+        $validator = $this->post->validatePost($request);
 
         if ($validator->fails()) {
             return redirect()->route('posts.create')
@@ -65,7 +65,7 @@ class PostController extends Controller
                              ->withInput();
         }
 
-        $postId = $this->myPost->SaveNewPostAndGetID($request);
+        $postId = $this->post->SaveNewPostAndGetID($request);
 
         return redirect()->route('posts.show', $postId);
     }
@@ -118,15 +118,15 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
 
-        $validator = $this->myPost->validatePost($request, $id);
+        $validator = $this->post->validatePost($request, $id);
 
         if ($validator->fails()) {
-            return redirect()->route('posts.edit')
+            return redirect()->route('posts.edit', $id)
                              ->withErrors($validator)
                              ->withInput();
         }
 
-        $post = $this->myPost->UpdatePostAndReturn($request, $id);
+        $post = $this->post->UpdatePostAndReturn($request, $id);
         return redirect()->route('posts.show', compact('post'));
 
     }

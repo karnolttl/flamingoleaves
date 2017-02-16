@@ -183,7 +183,9 @@ return [
         /*
          * My Added Service Providers
          */
-        Barryvdh\Debugbar\ServiceProvider::class
+        Barryvdh\Debugbar\ServiceProvider::class,
+        App\Providers\PostServiceProvider::class,
+        App\Providers\ImgServiceProvider::class
 
     ],
 

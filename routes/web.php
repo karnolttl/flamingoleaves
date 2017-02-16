@@ -24,4 +24,3 @@ Route::resource('posts', 'PostController');
 Route::resource('categories', 'CategoryController', ['except' => ['create']]);
 Route::resource('tags', 'TagController', ['except' => ['create']]);
 Route::resource('image', 'ImgController', ['only' => ['show', 'destroy']]);
-Route::resource('comments', 'CommentController');

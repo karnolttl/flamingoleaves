@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Mail;
 use App\Post;
 use App\Post_detail;
-use App\Comment;
 use App\User;
 use Session;
 

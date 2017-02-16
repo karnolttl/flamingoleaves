@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use App\Img;
 use Session;
 use Storage;
-use App\Repositories\ImgRepository;
+use App\Repositories\ImgRepositoryInterface;
 
 class ImgController extends Controller
 {
 
     protected $img;
 
-    public function __construct(ImgRepository $img)
+    public function __construct(ImgRepositoryInterface $img)
     {
         $this->img = $img;
     }

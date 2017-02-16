@@ -14,13 +14,13 @@ use Auth;
 use Session;
 use Image;
 use Validator;
-use App\Repositories\ImgRepository;
+use App\Repositories\ImgRepositoryInterface;
 
-class PostRepository {
+class PostRepository implements PostRepositoryInterface {
 
     protected $img;
 
-    public function __construct(ImgRepository $img)
+    public function __construct(ImgRepositoryInterface $img)
     {
         $this->img = $img;
     }

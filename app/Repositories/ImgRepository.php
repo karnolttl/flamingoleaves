@@ -10,7 +10,7 @@ use Session;
 use Image;
 use Storage;
 
-class ImgRepository {
+class ImgRepository implements ImgRepositoryInterface {
 
     public function saveImgs(Request $request, $postId) {
 
