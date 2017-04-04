@@ -94,41 +94,50 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+   body {
+       font-family: 'Open Sans', sans-serif;
+       font-size: 1rem;
+   }
+
+   ul {
+       padding: 0;
+   }
 
    .l-nav {
        position: absolute;
-       top: 0px;
-       left: 0px;
+       top: 0;
+       left: 0;
        width: 300px;
        height: 100vh;
        background-color: #DDD;
-       font-family: Verdana, Geneva, sans-serif;
        color: #777;
    }
 
-   .l-nav ul,
-   .t-nav ul {
-     margin: 0px;
+   .l-nav ul {
+     margin: 0;
      list-style-type: none;
-     -webkit-padding-start: 0px;
-     -webkit-margin-before: 0px;
-     -webkit-margin-after: 0px;
+     -webkit-padding-start: 0;
+     -webkit-margin-before: 0;
+     -webkit-margin-after: 0;
    }
 
-   .l-nav li,
-   .t-nav li {
-     margin: 0rem 2rem .75rem 2rem;
+   .l-nav li {
+     margin: 0 2rem .75rem 1rem;
    }
 
-   .l-nav a,
-   .t-nav a {
+   .l-nav a {
      color: inherit;
      text-decoration: none;
+   }
+
+   .l-nav hr {
+       margin: 0 1rem;
    }
 
    .hr {
      border-bottom: 1px solid #AAA;
      padding-bottom: .75rem;
+     margin: 0 0 0 1rem;
    }
 
    .l-nav-close {
@@ -136,20 +145,106 @@ textarea {
      font-size: 1.25rem;
    }
 
+   .l-nav-close {
+        width: 1.75rem;
+        height: 3.375rem;
+        cursor: pointer;
+   }
+
+   .l-nav-close span:after,
+   .l-nav-close span:before {
+       position: relative;
+       content: "";
+        display: block;
+        width: 100%;
+        height: 3px;
+        background-color: #777;
+   }
+
+   .l-nav-close span:after {
+       transform: translateY(5px) rotate(45deg);
+   }
+
+   .l-nav-close span:before {
+       transform: translateY(8px) rotate(-45deg);
+   }
+
    .mycontainer-inner {
      position: relative;
-     background-color: #CCC;
+     background-color: #EEE;
      width: 100vw;
      min-height: 100vh;
      transition: all 0.3s;
    }
 
+   header {
+      position: fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index: 1000;
+      background-color: #FFF;
+      transition: top 0.2s ease-in-out;
+   }
+
    .t-nav {
+     position: relative;
+     display: block;
      color: #777;
+     text-align: center;
+     font-size: 1.75rem;
+     line-height: 3rem;
+     height: 3.375rem;
+   }
+
+   .t-nav a {
+       color: inherit;
+       text-decoration: none;
+   }
+
+   .t-nav .l-nav-open {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.75rem;
+        height: 1.25rem;
+        cursor: pointer;
+   }
+
+   .t-nav .l-nav-open span,
+   .t-nav .l-nav-open span:after,
+   .t-nav .l-nav-open span:before {
+       position: relative;
+       content: "";
+        display: block;
+        width: 100%;
+        height: 3px;
+        background-color: #777;
+   }
+
+   .t-nav .l-nav-open span {
+       top:8px;
+   }
+
+   .t-nav .l-nav-open span:before{
+       top: -6px;
+   }
+   .t-nav .l-nav-open span:after{
+       top: 3px;
+   }
+
+   .t-nav .logo {
+       display: inline-block;
+   }
+
+   .t-nav .logo-start,
+   .t-nav .logo-end {
+       font-family: 'Pacifico', cursive;
    }
 
    .mycontainer-inner::after {
-     background-color: rgba(0,0,0,0.2);
+     background-color: #FFF;
      content: '';
      opacity: 0;
      transition: opacity 0.3s;
@@ -181,11 +276,25 @@ textarea {
        overflow-y: scroll;
    }
 
-   .menu-open #l-nav-open {
+   .menu-open .l-nav-open {
      visibility: hidden;
    }
 
+   .nav-up {
+       top: -54px;
+   }
 
+   .post-container {
+       display: flex;
+       flex-flow: column wrap;
+   }
+
+   .post {
+       margin: .5rem 1rem;
+       border-radius: .375rem;
+       padding: 1rem;
+       border: 1px solid purple;
+   }
 
 /* ==========================================================================
    Helper classes
