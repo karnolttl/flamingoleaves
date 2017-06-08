@@ -21,5 +21,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'password' => $password ?: $password = bcrypt('secret'),
         'verified' => true,
         'remember_token' => str_random(10),
+        'img' => "pattern" . rand(1,20) . ".png"
     ];
 });

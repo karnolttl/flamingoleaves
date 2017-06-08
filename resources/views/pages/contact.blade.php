@@ -1,8 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Contact')
 @section('content')
-  <div class="row">
-    <div class="col-md-12">
+    <div class="contact-form">
       <h1>Contact Me</h1>
       <hr>
       <form action="{{ route('pages.postcontact') }}" method="POST">
@@ -22,8 +21,7 @@
             <textarea id="message" name="message" class="form-control" placeholder="Type your message here..."></textarea>
           </div>
 
-          <button type="submit" value="Send Message"class="btn btn-success">Send Message</button>
+          <button type="submit" value="Send Message"class="button">Send Message</button>
       </form>
     </div>
-  </div>
 @endsection

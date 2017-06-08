@@ -18,9 +18,4 @@ class Img extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function owner()
-    {
-        return $this->belongsTo(User::class);
-    }
-
 }

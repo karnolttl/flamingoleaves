@@ -1,23 +1,9 @@
 @extends('layouts.main')
 @section('title', 'Home')
 @section('content')
-    <div>
-      <div>
-          <h1>Welcome to the Flamingoleaves Blog!</h1>
-          <p class="lead">Thank you so much for visiting. This is my test website built with Laravel. Please read the latest post.</p>
+    <div class="masthead">
+      <h1>Welcome to the <span class="logo-start">flamingo</span><span class="logo-end">leaves</span> Blog!</h1>
+      <p class="lead">Thank you so much for visiting. This is my website built with Laravel. Please checkout the front-end goodness.</p>
     </div>
-  </div> <!-- end of .row -->
-  <div class="post-container">
-      @foreach ($posts as $post)
-          <div class="post">
-              <h3>{{ $post->post_title }}</h3>
-              <h5>Published: {{ date( 'M. j, Y', strtotime($post->created_at)) }} BY <em>{{ $post->owner->name}}</em></h5>
-              <p>
-                  {!! (new Parsedown())->text(substr($post->post_details[0]->post_text, 0, 50)) !!}
-                  {{ strlen($post->post_details[0]->post_text) > 50 ? "..." : ""}}
-              </p>
-              <a href="{{ route('blog.single', $post->slug) }}" class="btn btn-primary">Read More</a>
-          </div>
-      @endforeach
-  </div>
+  @include('partials._index')
 @endsection

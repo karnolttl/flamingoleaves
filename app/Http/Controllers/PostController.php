@@ -78,7 +78,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::with('post_details', 'owner', 'category')->find($id);
+        $post = Post::with('post_detail', 'owner', 'category')->find($id);
         if ($post == null || $post->owner_id != Auth::user()->id)
         {
             return redirect()->route('posts.index');
@@ -98,7 +98,7 @@ class PostController extends Controller
     {
         $categories = Category::all();
         $tags = Tag::all();
-        $post = Post::with('post_details', 'owner')->find($id);
+        $post = Post::with('post_detail', 'owner')->find($id);
 
         if ($post == null || $post->owner_id != Auth::user()->id)
         {

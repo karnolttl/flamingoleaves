@@ -6,7 +6,7 @@
             <h1>All Posts</h1>
         </div>
         <div class="col-md-2">
-            <a href="{{ route('posts.create') }}" class="btn btn-lg btn-block btn-primary btn-h1-spacing">Create New Post</a>
+            <a href="{{ route('posts.create') }}" class="button">Create New Post</a>
         </div>
         <div class="col-md-12">
           <hr>
@@ -30,8 +30,8 @@
                         <th>{{ $post->id }}</th>
                         <td>{{ $post->post_title }}</td>
                         <td>
-                            {!! (new Parsedown())->text(substr($post->post_details[0]->post_text, 0, 50)) !!}
-                            {{ strlen($post->post_details[0]->post_text) > 50 ? "..." : ""}}
+                            {!! (new Parsedown())->text(substr($post->post_detail->post_text, 0, 50)) !!}
+                            {{ strlen($post->post_detail->post_text) > 50 ? "..." : ""}}
                         </td>
                         <td>{{ $post->category->name }}</td>
                         <td>{{ date('M j, Y', strtotime($post->created_at)) }}</td>

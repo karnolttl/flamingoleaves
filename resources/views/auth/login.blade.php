@@ -57,6 +57,8 @@
                                 <a class="btn btn-link" href="{{ url('/password/reset') }}">
                                     Forgot Your Password?
                                 </a>
+                                <br>
+                                <a href="{{ url('/auth/google') }}" >Login with Google+</a>
                             </div>
                         </div>
                     </form>

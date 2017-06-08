@@ -12,7 +12,7 @@
         <li><a href="{{ url('/login') }}">Login</a></li>
         <li><a href="{{ url('/register') }}">Register</a></li>
     @else
-        <li>{{ Auth::user()->name }}</li>
+        <li><a href="{{ route('profile.display') }}">{{ Auth::user()->name }}</li>
         <li><a href="{{ url('/posts') }}">Posts</a></li>
         <li><a href="{{ route('categories.index') }}">Categories</a></li>
         <li><a href="{{ route('tags.index') }}">Tags</a></li>

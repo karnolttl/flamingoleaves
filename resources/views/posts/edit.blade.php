@@ -32,25 +32,18 @@
                 @endforeach
             </select>
 
-            {{ Form::label('images', 'Upload Image(s):')}}
-            {{ Form::file('images[]', ['multiple' => true]) }}
+            {{ Form::label('image', 'Upload A Different Featured Image:')}}
+            {{ Form::file('image') }}
 
             {{ Form::label('post_text', "Post Body:")}}
-            <textarea class="form-control" required="" name="post_text" cols="50" rows="10" id="post_text">@foreach ($post->post_details as $post_detail){{ $post_detail->post_text }}@endforeach</textarea>
+            <textarea class="form-control" required="" name="post_text" cols="50" rows="10" id="post_text">{{ $post->post_detail->post_text }}</textarea>
 
             <div class="col-md-8">
                 <div class="row">
-                    @foreach ($post->imgs as $img)
-                        <div class="col-xs-4">
-                            <a href="{{ route('image.show', $img->id) }}">
-                                <img src="{{ asset('img') . '/' . $img->name }}" alt="" width="125">
-                            </a>
-                        </a></div>
-                    @endforeach
+                    <h3>Featured Image</h3>
+                    <img src="{{ asset('img') . '/' . $post->img->name }}" alt="" width="256">
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-4">

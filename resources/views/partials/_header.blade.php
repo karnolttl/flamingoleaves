@@ -6,3 +6,4 @@
         </div>
     </nav>
 </header>
+<div class="header-offset"></div>

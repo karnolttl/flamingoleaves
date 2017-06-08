@@ -18,7 +18,8 @@
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "doctrine/dbal": "^2.5.5",
-        "barryvdh/laravel-debugbar": "*"
+        "barryvdh/laravel-debugbar": "*",
+        "laravel/socialite": "^2.0"
     },
     "autoload": {
         "classmap": [

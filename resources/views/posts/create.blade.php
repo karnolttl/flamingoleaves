@@ -8,8 +8,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
+      <div class="post-form">
         <h1>Create New Post</h1>
         <hr>
         {!! Form::open(['route' => 'posts.store', 'data-parsley-validate' => '', 'files' => true]) !!}
@@ -33,8 +32,8 @@
                 @endforeach
             </select>
 
-            {{ Form::label('images', 'Upload Image(s):')}}
-            {{ Form::file('images[]', ['multiple' => true]) }}
+            {{ Form::label('image', 'Upload A Featured Image:')}}
+            {{ Form::file('image') }}
 
             {{ Form::label('post_text', "Post Body:")}}
             {{ Form::textarea('post_text', null, ['class' => 'form-control', 'required' => ''])}}
@@ -42,7 +41,6 @@
             {{ Form::submit('Create Post', ['class' => 'btn btn-success btn-lg btn-block'])}}
         {!! Form::close() !!}
       </div>
-    </div>
 @endsection
 
 @section('scripts')

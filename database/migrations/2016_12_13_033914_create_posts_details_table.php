@@ -16,7 +16,6 @@ class CreatePostsDetailsTable extends Migration
         Schema::create('post_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('post_id')->nullable()->unsigned()->index();
-            $table->integer('sequence')->nullable()->unsigned();
             $table->text('post_text', 2000);
             $table->timestamps();
         });

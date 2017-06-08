@@ -27,7 +27,7 @@ class PostRepository implements PostRepositoryInterface {
 
     public function getLatestPostsbyCurrentUserPaginated() {
 
-        return Post::with('post_details', 'owner', 'category')
+        return Post::with('post_detail', 'owner', 'category')
                     ->where('owner_id', '=', Auth::user()->id)
                     ->orderBy('id', 'desc')
                     ->paginate(10);
@@ -48,16 +48,20 @@ class PostRepository implements PostRepositoryInterface {
             'post_title' => 'required|max:255',
             'slug' => ['required', 'alpha_dash', 'min:5', 'max:255'],
             'category_id' => 'required|integer',
-            'post_text' => 'required',
-            'images.*' => 'image'
+            'post_text' => ['required', 'max:1999'],
+            'image' => 'image'
          ));
 
          $validator->after(function ($validator) use ($id, $request) {
              $post = Post::where('slug', '=', $request->slug)->get()->first();
-             if ($post != null)
+             if (isset($post))
              {
                  if($post->id != $id)
                   $validator->errors()->add('slug', 'The slug must be unique.');
+             }
+             $img = Img::where('post_id',$id)->first();
+             if (!isset($img) && !isset($request->image)) {
+                 $validator->errors()->add('image', 'An image is required.');
              }
          });
 
@@ -66,28 +70,31 @@ class PostRepository implements PostRepositoryInterface {
 
     public function SaveNewPostAndGetID(Request $request) {
 
-        $post = new Post;
-        $post->post_title = $request->post_title;
-        $post->owner_id = Auth::user()->id;
-        $post->slug = $request->slug;
-        $post->category_id = $request->category_id;
-        $post->save();
+        // $post = new Post;
+        // $post->post_title = $request->post_title;
+        // $post->owner_id = Auth::user()->id;
+        // $post->slug = $request->slug;
+        // $post->category_id = $request->category_id;
+        // $post->post_detail =
+        // $post->save();
 
-        $post_texts = str_split($request->post_text, 2000);
-        $sequenceIndex = 0;
-        foreach ($post_texts as $post_text) {
-            $post_detail = new Post_detail;
-            $post_detail->post_text = $post_text;
-            $post_detail->sequence = $sequenceIndex++;
-            $post_detail->post_id = $post->id;
-            $post_detail->save();
-        }
+        $post = Post::create([
+            'post_title' => $request->post_title,
+            'owner_id' => Auth::user()->id,
+            'slug' => $request->slug,
+            'category_id' => $request->category_id,
+        ]);
+
+        Post_detail::create([
+            'post_text' => $request->post_text,
+            'post_id' => $post->id,
+        ]);
 
         if (isset($request->tags)) {
             $post->tags()->syncWithoutDetaching($request->tags);
         }
 
-        $this->img->saveImgs($request, $post->id);
+        $this->img->saveImg($request, $post->id);
 
         Session::flash('success', 'The blog post was successfully saved!');
 
@@ -96,40 +103,12 @@ class PostRepository implements PostRepositoryInterface {
 
     public function UpdatePostAndReturn(Request $request, $id) {
 
-        $post = Post::with('post_details', 'owner')->find($id);
+        $post = Post::with('post_detail', 'owner')->find($id);
         $post->post_title = $request->post_title;
         $post->slug = $request->slug;
         $post->category_id = $request->category_id;
-        $numOfPostDetails = $post->post_details->count();
-
-        // split text into 2000 character chunks for Post_detail entries
-        $post_texts = str_split($request->post_text, 2000);
-        $sequenceIndex = 0;
-
-        // update and add Post_detail objects if edited Post contains same or more text
-        foreach ($post_texts as $post_text) {
-            if ($sequenceIndex >= $numOfPostDetails) {
-                $post_detail = new Post_detail;
-                $post_detail->post_text = $post_text;
-                $post_detail->sequence = $sequenceIndex++;
-                $post_detail->post_id = $post->id;
-                $post_detail->save();
-                $post->post_details->add($post_detail);
-            }
-            else {
-                $post_detail = $post->post_details->where('sequence', '=', $sequenceIndex++)->first();
-                $post_detail->post_text = $post_text;
-                $post_detail->save();
-            }
-        }
-
-        // remove old Post_detail if updated Post contains less text
-        for ($i=$numOfPostDetails-1; $i >= $sequenceIndex ; $i--) {
-            $post->post_details->where('sequence', '=', $i)->first()->delete();
-            $post->post_details->pop();
-        }
-
-        $post->save();
+        $post->post_detail->post_text = $request->post_text;
+        $post->push();
 
         if (isset($request->tags)) {
             $post->tags()->sync($request->tags);
@@ -137,7 +116,7 @@ class PostRepository implements PostRepositoryInterface {
             $post->tags()->sync([]);
         }
 
-        $this->img->saveImgs($request, $post->id);
+        $this->img->saveImg($request, $post->id);
 
         // set flash data with success message
         Session::flash('success', 'This post was successfully saved.');

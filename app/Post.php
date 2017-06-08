@@ -11,26 +11,16 @@ class Post extends Model
      *
      * @var array
      */
-    protected $fillable = ['post_title'];
+    protected $fillable = ['post_title', 'owner_id', 'slug', 'category_id'];
 
     public function owner()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function post_details()
+    public function post_detail()
     {
-        return $this->hasMany(Post_detail::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function addComment(Comment $comment)
-    {
-        return $this->comments()->save($comment);
+        return $this->hasOne(Post_detail::class);
     }
 
     public function category()
@@ -43,8 +33,8 @@ class Post extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-    public function imgs()
+    public function img()
     {
-        return $this->hasMany(Img::class);
+        return $this->hasOne(Img::class);
     }
 }

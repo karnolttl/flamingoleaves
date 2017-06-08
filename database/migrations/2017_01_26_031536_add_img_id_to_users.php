@@ -14,8 +14,7 @@ class AddImgIdToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('img_id')->nullable()->after('token')->unsigned();
-            $table->foreign('img_id')->references('id')->on('imgs');
+            $table->string('img')->nullable();
         });
     }
 
@@ -27,7 +26,7 @@ class AddImgIdToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('img_id');
+            $table->dropColumn('img');
         });
     }
 }

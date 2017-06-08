@@ -21,7 +21,7 @@ class PageController extends Controller
     }
     public function home()
     {
-        $posts = Post::with('post_details', 'owner')
+        $posts = Post::with('post_detail', 'owner')
                             ->orderBy('id', 'desc')
                             ->take(5)
                             ->get();

@@ -11,7 +11,7 @@ class Post_detail extends Model
      *
      * @var array
      */
-    protected $fillable = ['post_text'];
+    protected $fillable = ['post_text', 'post_id'];
 
     public function post()
     {
