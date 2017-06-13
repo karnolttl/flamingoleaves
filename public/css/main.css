@@ -320,6 +320,7 @@ textarea {
    .post-container {
        display: flex;
        flex-flow: column wrap;
+       justify-content: space-around;
    }
 
    .post {
@@ -370,6 +371,10 @@ textarea {
        color: #7ebd7e;
        background-color: #AFE9AF;
        border-color: #7ebd7e;
+   }
+
+   .article {
+       width: auto;
    }
 
    a:focus.button,
@@ -475,6 +480,11 @@ textarea {
 
     .post {
         width: 300px;
+    }
+    .article {
+        width: 80vw;
+        max-width: 50rem;
+        margin: auto;
     }
 }
 

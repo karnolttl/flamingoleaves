@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Contact')
 @section('content')
-    <div class="contact-form">
+    <div class="contact-form article">
       <h1>Contact Me</h1>
       <hr>
       <form action="{{ route('pages.postcontact') }}" method="POST">
