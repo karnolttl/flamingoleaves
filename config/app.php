@@ -183,10 +183,8 @@ return [
         /*
          * My Added Service Providers
          */
-        Barryvdh\Debugbar\ServiceProvider::class,
         App\Providers\PostServiceProvider::class,
         App\Providers\ImgServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class
 
     ],
 
@@ -238,9 +236,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         // My Added Facades
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Socialite' => Laravel\Socialite\Facades\Socialite::class
     ],
 
 ];

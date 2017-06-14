@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Session;
 use Auth;
 use Mail;
-use Debugbar;
 use Socialite;
 use App\User;
 

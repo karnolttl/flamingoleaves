@@ -7,7 +7,6 @@ use App\Post;
 use App\Post_detail;
 use App\User;
 use Auth;
-use Debugbar;
 
 class BlogController extends Controller
 {
