@@ -24,7 +24,5 @@ Route::resource('posts', 'PostController');
 Route::resource('categories', 'CategoryController', ['except' => ['create']]);
 Route::resource('tags', 'TagController', ['except' => ['create']]);
 Route::resource('image', 'ImgController', ['only' => ['show', 'destroy']]);
-Route::get('auth/google', 'Auth\LoginController@redirectToProvider');
-Route::get('auth/google/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('profile', ['uses' => 'ProfileController@display', 'as' => 'profile.display']);
 Route::put('profile', ['uses' => 'ProfileController@update', 'as' => 'profile.update']);

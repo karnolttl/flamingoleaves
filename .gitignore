@@ -8,3 +8,4 @@ Homestead.yaml
 .env
 storage/debugbar/
 public/.htaccess
+laradock

@@ -66,40 +66,4 @@ class LoginController extends Controller
          }
     }
 
-    public function redirectToProvider()
-    {
-        return Socialite::driver('google')->redirect();
-    }
-
-    public function handleProviderCallback()
-    {
-        try {
-            $user = Socialite::driver('google')->user();
-        } catch (Exception $e) {
-            return redirect()->route('auth/google');
-        }
-
-        $authUser = $this ->findOrCreateUser($user);
-
-        Auth::login($authUser, true);
-
-        return redirect()->route('pages.home');
-    }
-
-    private function findOrCreateUser($googleUser)
-    {
-        if ($authUser = User::where('google_id', $googleUser->id)->first()) {
-            return $authUser;
-        }
-
-        return User:: create([
-            'name' => $googleUser->name,
-            'email' => $googleUser->email,
-            'password' => 'secret',
-            'google_id' => $googleUser->id,
-            'verified' => true,
-            'token' => null
-        ]);
-    }
-
 }
